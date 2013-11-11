@@ -1,0 +1,3 @@
+rap2h_cooking:
+    resource: "@Rap2hCookingBundle/Resources/config/routing.yml"
+    prefix:   /

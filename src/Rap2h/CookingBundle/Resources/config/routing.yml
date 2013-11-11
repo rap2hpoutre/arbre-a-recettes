@@ -1,0 +1,12 @@
+WelcomeCooking:
+    pattern:  /
+    defaults: { _controller: Rap2hCookingBundle:Cooking:index }
+
+AboutCooking:
+    pattern:  /about
+    defaults: { _controller: Rap2hCookingBundle:About:index }
+
+
+AddRecipeItem:
+    pattern:  /add/{recipeItemId}
+    defaults: { _controller: Rap2hCookingBundle:Cooking:addRecipeItem }

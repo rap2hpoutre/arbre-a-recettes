@@ -1,0 +1,7 @@
+parameters:
+#    rap2h_cooking.example.class: Rap2h\CookingBundle\Example
+
+services:
+#    rap2h_cooking.example:
+#        class: %rap2h_cooking.example.class%
+#        arguments: [@service_id, "plain_value", %parameter%]
