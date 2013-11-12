@@ -1,12 +1,18 @@
-WelcomeCooking:
+CookingIndex:
     pattern:  /
     defaults: { _controller: Rap2hCookingBundle:Cooking:index }
 
-AboutCooking:
+CookingAbout:
     pattern:  /about
     defaults: { _controller: Rap2hCookingBundle:About:index }
 
 
-AddRecipeItem:
+CookingAddRecipeItem:
     pattern:  /add/{recipeItemId}
     defaults: { _controller: Rap2hCookingBundle:Cooking:addRecipeItem }
+    requirements:
+        # recipeItemId: \d+
+
+CookingResetRecipe:
+    pattern:  /reset/
+    defaults: { _controller: Rap2hCookingBundle:Cooking:resetRecipe }
