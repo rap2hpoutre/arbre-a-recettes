@@ -4,8 +4,12 @@ CookingIndex:
 
 CookingAbout:
     pattern:  /about
-    defaults: { _controller: Rap2hCookingBundle:About:index }
+    defaults: { _controller: Rap2hCookingBundle:Cooking:about }
 
+
+CookingStart:
+    pattern:  /start
+    defaults: { _controller: Rap2hCookingBundle:Cooking:start }
 
 CookingAddRecipeItem:
     pattern:  /add/{recipeItemId}

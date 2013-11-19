@@ -3,25 +3,19 @@
 {% block title %}{{ parent() }} - Index{% endblock %}
 
 {% block body %}
-
-
-<h2>Listes des éléments de recette</h2>
-<p>
-
-    <ul>
-        {% for item in recipeItems %}
-            <li>{{ item }}</li>
-        {% else %}
-            <li>Pas encore d'éléments dans la recette.</li>
-        {% endfor %}
-    </ul>
-</p>
-<h2>Actions</h2>
-<p>
-	<ul>
-    	<li><a href="{{ path('CookingAddRecipeItem', {'recipeItemId': 'patate'}) }}">Ajouter une patate</a></li>
-    	<li><a href="{{ path('CookingAddRecipeItem', {'recipeItemId': 'choucroute'}) }}">Ajouter une choucroute</a></li>
-    	<li><a href="{{ path('CookingResetRecipe') }}">Réinitialiser</a></li>
-	</ul>
-</p>
+    <div class="container">
+            <div class="starter-template" style="padding: 50px 15px; text-align: center;">
+                <p>
+                    Aujourd'hui, tu vas faire
+                    <button type="button" class="btn btn-primary">un plat</button>
+                    <button type="button" class="btn btn-default">un dessert</button>
+                    pour
+                    <button type="button" class="btn btn-default">2</button>
+                    <button type="button" class="btn btn-default">3</button>
+                    <button type="button" class="btn btn-primary">4</button>
+                    <button type="button" class="btn btn-default">5</button>
+                    <button type="button" class="btn btn-default">6</button>
+                    personnes <a href="{{ path('CookingStart') }}" class="btn btn-success" role="button">Go &raquo;</a>
+                </p>
+            </div>
 {% endblock %}

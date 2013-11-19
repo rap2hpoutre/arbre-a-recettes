@@ -1,0 +1,24 @@
+{% extends "Rap2hCookingBundle::layout.html.twig" %}
+
+{% block title %}{{ parent() }} - Index{% endblock %}
+
+{% block body %}
+<h1>Ma recette</h1>
+<p>
+    <ul>
+        {% for item in recipeItems %}
+            <li>{{ item }}</li>
+        {% else %}
+            <li>Pas encore d'éléments dans la recette.</li>
+        {% endfor %}
+    </ul>
+</p>
+<h1>Actions</h1>
+<p>
+	<ul>
+    	<li><a href="{{ path('CookingAddRecipeItem', {'recipeItemId': 'patate'}) }}">Ajouter une patate</a></li>
+    	<li><a href="{{ path('CookingAddRecipeItem', {'recipeItemId': 'choucroute'}) }}">Ajouter une choucroute</a></li>
+    	<li><a href="{{ path('CookingResetRecipe') }}">Réinitialiser</a></li>
+	</ul>
+</p>
+{% endblock %}
