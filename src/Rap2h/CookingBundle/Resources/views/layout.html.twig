@@ -52,6 +52,14 @@
 			{% block body %}
 			{% endblock %}
 			
+			
+			<h2>Debug et tests</h2>
+			<ul>
+				<li><a href="{{ path('CookingAdminAddRandomRecipeItem') }}">Ajouter un élément de recette aléatoire en DB</a></li>
+				<li><a href="{{ path('CookingAdminAddRandomRecipeItem', { 'addChilds': true }) }}">Ajouter un élément de recette aléatoire en DB avec enfant</a></li>
+				<li><a href="{{ path('CookingAdminAddRecipe') }}">Ajouter manuellement un élément de recette en DB</a></li>
+				
+			</ul>
 </div>
 
 

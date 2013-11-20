@@ -7,7 +7,7 @@
 <p>
     <ul>
         {% for item in recipeItems %}
-            <li>{{ item }}</li>
+            <li>{{ item.text }}</li>
         {% else %}
             <li>Pas encore d'éléments dans la recette.</li>
         {% endfor %}
@@ -16,8 +16,11 @@
 <h1>Actions</h1>
 <p>
 	<ul>
-    	<li><a href="{{ path('CookingAddRecipeItem', {'recipeItemId': 'patate'}) }}">Ajouter une patate</a></li>
-    	<li><a href="{{ path('CookingAddRecipeItem', {'recipeItemId': 'choucroute'}) }}">Ajouter une choucroute</a></li>
+		{% for item in availableRecipeItems %}
+			<li><a href="{{ path('CookingAddRecipeItem', {'recipeItemId': item.id }) }}">Ajouter un {{ item.text }}</a></li>
+		{% else %}
+			<li>Aucune recette disponible.</li>
+		{% endfor %}
     	<li><a href="{{ path('CookingResetRecipe') }}">Réinitialiser</a></li>
 	</ul>
 </p>
