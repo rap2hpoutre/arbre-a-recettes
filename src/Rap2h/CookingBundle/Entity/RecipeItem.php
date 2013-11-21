@@ -27,36 +27,29 @@ class RecipeItem
      * @ORM\Column(name="text", type="string", length=255)
      */
     private $text;
-	
+
 	/**
      * @ORM\OneToMany(targetEntity="Rap2h\CookingBundle\Entity\RecipeItem", mappedBy="parent", cascade={"persist", "remove"})
      **/
     private $children;
-	
+
 	/**
      * @ORM\ManyToOne(targetEntity="Rap2h\CookingBundle\Entity\RecipeItem", inversedBy="children")
      * @ORM\JoinColumn(name="parent_id", referencedColumnName="id")
      **/
     private $parent;
-	
-	public function __construct() {
+    /**
+     * Constructor
+     */
+    public function __construct()
+    {
         $this->children = new \Doctrine\Common\Collections\ArrayCollection();
     }
-	
-	public function addChild(RecipeItem $item) {
-		$item->setParent($this);
-		$this->children->add($item);
-	}
-	
-	public function setParent(RecipeItem $item) {
-		$this->parent = $item;
-	}
-
 
     /**
      * Get id
      *
-     * @return integer 
+     * @return integer
      */
     public function getId()
     {
@@ -72,17 +65,74 @@ class RecipeItem
     public function setText($text)
     {
         $this->text = $text;
-    
+
         return $this;
     }
 
     /**
      * Get text
      *
-     * @return string 
+     * @return string
      */
     public function getText()
     {
         return $this->text;
+    }
+
+    /**
+     * Add child
+     *
+     * @param \Rap2h\CookingBundle\Entity\RecipeItem $child
+     * @return RecipeItem
+     */
+    public function addChild(\Rap2h\CookingBundle\Entity\RecipeItem $child)
+    {
+        $this->children[] = $child;
+    	$child->setParent($this);
+        return $this;
+    }
+
+    /**
+     * Remove child
+     *
+     * @param \Rap2h\CookingBundle\Entity\RecipeItem $child
+     */
+    public function removeChild(\Rap2h\CookingBundle\Entity\RecipeItem $child)
+    {
+        $this->children->removeElement($child);
+        $child->setParent(null);
+    }
+
+    /**
+     * Get children
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getChildren()
+    {
+        return $this->children;
+    }
+
+    /**
+     * Set parent
+     *
+     * @param \Rap2h\CookingBundle\Entity\RecipeItem $parent
+     * @return RecipeItem
+     */
+    public function setParent(\Rap2h\CookingBundle\Entity\RecipeItem $parent = null)
+    {
+        $this->parent = $parent;
+
+        return $this;
+    }
+
+    /**
+     * Get parent
+     *
+     * @return \Rap2h\CookingBundle\Entity\RecipeItem
+     */
+    public function getParent()
+    {
+        return $this->parent;
     }
 }
