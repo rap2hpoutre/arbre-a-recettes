@@ -31,10 +31,10 @@ class RecipeItem
 	/**
      * @ORM\OneToMany(targetEntity="Rap2h\CookingBundle\Entity\RecipeItem", mappedBy="parent", cascade={"persist", "remove"})
      **/
-    private $children;
+    private $childs;
 
 	/**
-     * @ORM\ManyToOne(targetEntity="Rap2h\CookingBundle\Entity\RecipeItem", inversedBy="children")
+     * @ORM\ManyToOne(targetEntity="Rap2h\CookingBundle\Entity\RecipeItem", inversedBy="childs")
      * @ORM\JoinColumn(name="parent_id", referencedColumnName="id")
      **/
     private $parent;
@@ -43,7 +43,7 @@ class RecipeItem
      */
     public function __construct()
     {
-        $this->children = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->childs = new \Doctrine\Common\Collections\ArrayCollection();
     }
 
     /**
@@ -87,7 +87,7 @@ class RecipeItem
      */
     public function addChild(\Rap2h\CookingBundle\Entity\RecipeItem $child)
     {
-        $this->children[] = $child;
+        $this->childs[] = $child;
     	$child->setParent($this);
         return $this;
     }
@@ -99,18 +99,18 @@ class RecipeItem
      */
     public function removeChild(\Rap2h\CookingBundle\Entity\RecipeItem $child)
     {
-        $this->children->removeElement($child);
+        $this->childs->removeElement($child);
         $child->setParent(null);
     }
 
     /**
-     * Get children
+     * Get childs
      *
      * @return \Doctrine\Common\Collections\Collection
      */
-    public function getChildren()
+    public function getChilds()
     {
-        return $this->children;
+        return $this->childs;
     }
 
     /**
