@@ -15,15 +15,12 @@ class RecipeType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('title')
-            ->add('author')
+            ->add('title', 'text', array('label' => 'Titre de la recette'))
+            ->add('author', 'text', array('label' => 'Nom de l\'auteur'))
             ->add('recipeItems', 'collection', array(
-            /*
-			    'class' => 'Rap2hCookingBundle:RecipeItem',
-			    'property' => 'text',
-    		*/
     			'type' => new RecipeItemType(),
-			    'allow_add' => true
+			    'allow_add' => true,
+			    'label' => 'Liste des étapes pour réaliser la recette'
 			))
         ;
     }
