@@ -1,6 +1,5 @@
 {% extends "Rap2hCookingBundle::layout.html.twig" %}
 {% form_theme form 'Rap2hCookingBundle:Form:default.html.twig' %}
-{% form_theme form _self %}
 
 {% block title %}{{ parent() }} - Ajouter une recette{% endblock %}
 
@@ -14,11 +13,7 @@
 
 
 
-{% block dddd_rap2h_cookingbundle_recipe_recipeItems_widget %}
-    <div class="text_widget">
-        {{ block('form_widget_simple') }}
-    </div>
-{% endblock %}
+
 
 
 
@@ -26,9 +21,7 @@
 
 <div class="well">
   <form method="post" {{ form_enctype(form) }} />
-
-{{ form_widget(form) }}
-
+	{{ form_widget(form) }}
 <input type="submit" class="btn btn-primary" />
 </form>
 </div>
