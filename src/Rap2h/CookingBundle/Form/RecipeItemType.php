@@ -15,7 +15,7 @@ class RecipeItemType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('text')
+            ->add('text', 'text', array('label' => 'Etape'))
             ->add('parent', 'hidden')
         ;
     }

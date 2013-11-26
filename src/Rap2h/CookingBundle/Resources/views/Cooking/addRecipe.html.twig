@@ -25,12 +25,17 @@
 <input type="submit" class="btn btn-primary" />
 </form>
 </div>
+
+
+
+
+
 {% endblock %}
 {% block bodyscript %}
 
 {# A virer du LAyout et à refaire avec le cookbook #}
 <script type="text/javascript">
-$(document).ready(function() {
+$(function() {
 	/*
 	var $container = $('div#rap2h_cookingbundle_recipe_recipeItems');
 	var index = $container.find(':input').length;
@@ -40,9 +45,9 @@ $(document).ready(function() {
 
 	}
 	// $container
+
+
 */
-
-
 
 
 
@@ -78,8 +83,15 @@ $(document).ready(function() {
     // Dans le contenu de l'attribut « data-prototype », on remplace :
     // - le texte "__name__label__" qu'il contient par le label du champ
     // - le texte "__name__" qu'il contient par le numéro du champ
-    var $prototype = $($container.attr('data-prototype').replace(/__name__label__/g, 'Catégorie n°' + (index+1))
-                                                        .replace(/__name__/g, index));
+    console.log($container.attr('data-prototype'));
+    var $prototype = $($container.attr('data-prototype').replace(/__name__label__/g, 'Etape n°' + (index+1))
+                                                        .replace(/__name__/g, index)
+														.replace(/<br>/g, '')
+														.replace(/<br \/>/g, '') + '</pre>');
+  	// $prototype.html($prototype.html())
+  	// $($prototype).remove(".form_row");
+	console.log($prototype.html());
+
 
     // On ajoute au prototype un lien pour pouvoir supprimer la catégorie
     ajouterLienSuppression($prototype);
@@ -106,6 +118,8 @@ $(document).ready(function() {
       return false;
     });
   }
+
+
 });
 </script>
 {% endblock %}

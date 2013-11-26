@@ -92,7 +92,6 @@ class CookingController extends Controller {
 		if ($request->getMethod() == 'POST') {
 
 			$form->bind($request);
-
 			if ($form->isValid()) {
 
 				$em = $this->getDoctrine()->getManager();
