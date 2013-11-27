@@ -13,18 +13,18 @@ CookingStart:
 
 CookingAddRecipeItem:
     pattern:  /add/{recipeItemId}
-    defaults: { _controller: Rap2hCookingBundle:Cooking:addRecipeItem }
+    defaults: { _controller: Rap2hCookingBundle:Cooking:addRecipeStep }
     requirements:
-        # recipeItemId: \d+
+        recipeItemId: \d+
 
 CookingResetRecipe:
     pattern:  /reset/
     defaults: { _controller: Rap2hCookingBundle:Cooking:resetRecipe }
 
-CookingAdminAddRandomRecipeItem:
-    pattern:  /adminAddRandomItem/{addChilds}
-    defaults: { _controller: Rap2hCookingBundle:Cooking:adminAddRandomItem, addChilds: false }
-
 CookingAdminAddRecipe:
     pattern:  /adminAddRecipe/
     defaults: { _controller: Rap2hCookingBundle:Cooking:adminAddRecipe}
+
+CookingAdminJoinRecipeSteps:
+    pattern:  /adminJoinRecipeSteps/
+    defaults: { _controller: Rap2hCookingBundle:Cooking:adminJoinRecipeSteps}

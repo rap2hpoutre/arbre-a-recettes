@@ -3,10 +3,15 @@
 namespace Rap2h\CookingBundle\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Session\Session;
-use Rap2h\CookingBundle\Entity\RecipeItem;
+
 use Rap2h\CookingBundle\Entity\Recipe;
+use Rap2h\CookingBundle\Entity\RecipeStep;
+use Rap2h\CookingBundle\Entity\RecipeStepText;
+
 use Rap2h\CookingBundle\Form\RecipeType;
 
 class CookingController extends Controller {
@@ -22,79 +27,76 @@ class CookingController extends Controller {
 	public function startAction() {
 		$session = $this->get('session');
 		$session->start();
-		$items = $session->get('recipeItems');
+		$items = $session->get('recipeSteps');
 
-		$repository = $this->getDoctrine()->getManager()->getRepository('Rap2hCookingBundle:RecipeItem');
-		$availableRecipeItems = $repository->findBy(array('parent' => count($items) ? end($items)->id : null));
+		$repository = $this->getDoctrine()->getManager()->getRepository('Rap2hCookingBundle:RecipeStep');
+		$availableRecipeSteps = $repository->findBy(array('parent' => count($items) ? end($items)->id : null));
 
-		return $this->render('Rap2hCookingBundle:Cooking:start.html.twig', array("recipeItems" => $items, 'availableRecipeItems' => $availableRecipeItems));
+		return $this->render('Rap2hCookingBundle:Cooking:start.html.twig', array("recipeSteps" => $items, 'availableRecipeSteps' => $availableRecipeSteps));
 	}
 
 	public function resetRecipeAction() {
 		$session = $this->get('session');
 		$session->start();
-		$session->set('recipeItems', null);
+		$session->set('recipeSteps', null);
 		return $this->redirect($this->generateUrl('CookingStart'));
 	}
 
-	public function addRecipeItemAction($recipeItemId) {
+	public function addRecipeStepAction($recipeItemId) {
 
 		$session = $this->get('session');
 		$session->start();
 
-		$item = $this->getDoctrine()->getManager()->getRepository('Rap2hCookingBundle:RecipeItem')->find($recipeItemId);
+		$item = $this->getDoctrine()->getManager()->getRepository('Rap2hCookingBundle:RecipeStep')->find($recipeItemId);
 
 
-		$session->getFlashBag()->add('info', 'Tu viens d\'ajouter une ' . $item->getText());
+		$session->getFlashBag()->add('info', 'Tu viens d\'ajouter une ' . $item->getRandomText());
 		$itema = new \stdClass();
-		$itema->text = $item->getText();
+		$itema->text = $item->getRandomText();
 		$itema->id = $item->getId();
 
-		$items = $session->get('recipeItems');
+		$items = $session->get('recipeSteps');
 		$items[] = $itema;
-		$session->set('recipeItems', $items);
+		$session->set('recipeSteps', $items);
 
 		return $this->redirect($this->generateUrl('CookingStart'));
 
 	}
 
-
-	public function adminAddRandomItemAction($addChilds) {
-		$recipeItem = new RecipeItem();
-		$recipeItem->setText(uniqid());
-
-		if ($addChilds) {
-			for($i =0; $i < rand(1,5); $i++) {
-				$recipeItemChild = new RecipeItem();
-				$recipeItemChild->setText(uniqid('child_'));
-				$recipeItem->addChild($recipeItemChild);
-			}
-		}
-
-		$em = $this->getDoctrine()->getManager();
-
-		$this->get('session')->getFlashBag()->add('info', 'élément de recette aléatoire ajouté');
-
-		$em->persist($recipeItem);
-		$em->flush();
-
-		return $this->redirect($this->generateUrl('CookingIndex'));
-	}
-
 	public function adminAddRecipeAction() {
-
 		$recipe = new Recipe();
-		// $recipe->addRecipeItem(new RecipeItem());
-
 		$form = $this->createForm(new RecipeType(), $recipe);
 
 		$request = $this->get('request');
+
 		if ($request->getMethod() == 'POST') {
 
 			$form->bind($request);
+
 			if ($form->isValid()) {
 
+				$a = $form->getData();
+				$unlinked_recipe_text = $form->get('unlinked_recipe_text')->getData();
+
 				$em = $this->getDoctrine()->getManager();
+				
+
+				// Les etapes
+
+				$steps     = explode( "\n", str_replace( "\r", "\n", str_replace( "\r\n", "\n", $unlinked_recipe_text ) ) );
+				foreach ($steps as $key => $step) {
+					
+					$recipeStepText = new RecipeStepText();
+					$recipeStepText->setText(trim($step)); 
+
+					if (isset($recipeStep)) $lastRecipeStep = $recipeStep;
+
+					$recipeStep = new RecipeStep();
+					$recipeStep->addText($recipeStepText);
+					if (isset($lastRecipeStep)) $recipeStep->setParent($lastRecipeStep);
+
+					$recipe->addRecipeStep($recipeStep);
+				}
 				$em->persist($recipe);
 				$em->flush();
 
@@ -105,6 +107,41 @@ class CookingController extends Controller {
 		}
 
 		return $this->render('Rap2hCookingBundle:Cooking:addRecipe.html.twig', array(
+			'form' => $form->createView(),
+		));
+	}
+
+
+
+	public function adminJoinRecipeStepsAction(Request $request) {
+		$repository = $this->getDoctrine()->getManager()->getRepository('Rap2hCookingBundle:RecipeStep');
+		$defaultData = array('message' => 'Type your message here');
+    	$form = $this->createFormBuilder($defaultData)
+    		->add('Element1', 'entity', array(
+			    'class' => 'Rap2hCookingBundle:RecipeStep',
+			    'query_builder' => function($repository) { 
+			    	return $repository->createQueryBuilder('p') /* ->orderBy('p.id', 'ASC') */ ; 
+			   	},
+			    'property' => 'randomText'
+			))
+    		->add('Element2', 'entity', array(
+			    'class' => 'Rap2hCookingBundle:RecipeStep',
+			    'query_builder' => function($repository) { 
+			    	return $repository->createQueryBuilder('p') /* ->orderBy('p.id', 'ASC') */ ; 
+			   	},
+			    'property' => 'randomText'
+			))
+			->getForm()
+		;
+
+		 $form->handleRequest($request);
+
+	    if ($form->isValid()) {
+	        // data is an array with "name", "email", and "message" keys
+	        $data = $form->getData();
+	    }
+
+	    return $this->render('Rap2hCookingBundle:Cooking:joinRecipeSteps.html.twig', array(
 			'form' => $form->createView(),
 		));
 	}

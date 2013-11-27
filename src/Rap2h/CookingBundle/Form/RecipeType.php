@@ -17,10 +17,10 @@ class RecipeType extends AbstractType
         $builder
             ->add('title', 'text', array('label' => 'Titre de la recette'))
             ->add('author', 'text', array('label' => 'Nom de l\'auteur'))
-            ->add('recipeItems', 'collection', array(
-    			'type' => new RecipeItemType(),
-			    'allow_add' => true,
-			    'label' => 'Liste des étapes pour réaliser la recette'
+            ->add('unlinked_recipe_text', 'textarea', array(
+			    'label' => 'Liste des étapes pour réaliser la recette',
+                'mapped' => false,
+                'attr' => array('cols' => '50', 'rows' => '10')
 			))
         ;
     }

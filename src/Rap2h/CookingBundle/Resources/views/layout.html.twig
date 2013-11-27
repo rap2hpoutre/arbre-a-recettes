@@ -49,10 +49,8 @@
 			{% if app.environment == 'dev' %}
 				<h2>Debug et tests</h2>
 				<ul>
-					<li><a href="{{ path('CookingAdminAddRandomRecipeItem') }}">Ajouter un élément de recette aléatoire en DB</a></li>
-					<li><a href="{{ path('CookingAdminAddRandomRecipeItem', { 'addChilds': true }) }}">Ajouter un élément de recette aléatoire en DB avec enfant</a></li>
 					<li><a href="{{ path('CookingAdminAddRecipe') }}">Ajouter une recette en DB</a></li>
-
+					<li><a href="{{ path('CookingAdminJoinRecipeSteps') }}">Associer des éléments entre eux</a></li>
 				</ul>
 			{% endif %}
 		</div>

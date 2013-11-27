@@ -36,9 +36,9 @@ class Recipe
     private $author;
 
     /**
-  	 * @ORM\ManyToMany(targetEntity="Rap2h\CookingBundle\Entity\RecipeItem", cascade={"persist"})
+  	 * @ORM\ManyToMany(targetEntity="Rap2h\CookingBundle\Entity\RecipeStep", cascade={"persist"})
      */
-    private $recipeItems;
+    private $recipeSteps;
 
 
     /**
@@ -101,39 +101,39 @@ class Recipe
      */
     public function __construct()
     {
-        $this->recipeItems = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->recipeSteps = new \Doctrine\Common\Collections\ArrayCollection();
     }
 
     /**
-     * Add recipeItems
+     * Add recipeSteps
      *
-     * @param \Rap2h\CookingBundle\Entity\RecipeItem $recipeItems
+     * @param \Rap2h\CookingBundle\Entity\RecipeStep $recipeSteps
      * @return Recipe
      */
-    public function addRecipeItem(\Rap2h\CookingBundle\Entity\RecipeItem $recipeItem)
+    public function addRecipeStep(\Rap2h\CookingBundle\Entity\RecipeStep $recipeStep)
     {
-        $this->recipeItems[] = $recipeItem;
+        $this->recipeSteps[] = $recipeStep;
 
         return $this;
     }
 
     /**
-     * Remove recipeItems
+     * Remove recipeSteps
      *
-     * @param \Rap2h\CookingBundle\Entity\RecipeItem $recipeItems
+     * @param \Rap2h\CookingBundle\Entity\RecipeStep $recipeSteps
      */
-    public function removeRecipeItem(\Rap2h\CookingBundle\Entity\RecipeItem $recipeItem)
+    public function removeRecipeStep(\Rap2h\CookingBundle\Entity\RecipeStep $recipeStep)
     {
-        $this->recipeItems->removeElement($recipeItem);
+        $this->recipeSteps->removeElement($recipeStep);
     }
 
     /**
-     * Get recipeItems
+     * Get recipeSteps
      *
      * @return \Doctrine\Common\Collections\Collection
      */
-    public function getRecipeItems()
+    public function getRecipeSteps()
     {
-        return $this->recipeItems;
+        return $this->recipeSteps;
     }
 }
