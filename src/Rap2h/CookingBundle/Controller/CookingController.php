@@ -79,15 +79,15 @@ class CookingController extends Controller {
 				$unlinked_recipe_text = $form->get('unlinked_recipe_text')->getData();
 
 				$em = $this->getDoctrine()->getManager();
-				
+
 
 				// Les etapes
 
 				$steps     = explode( "\n", str_replace( "\r", "\n", str_replace( "\r\n", "\n", $unlinked_recipe_text ) ) );
 				foreach ($steps as $key => $step) {
-					
+
 					$recipeStepText = new RecipeStepText();
-					$recipeStepText->setText(trim($step)); 
+					$recipeStepText->setText(trim($step));
 
 					if (isset($recipeStep)) $lastRecipeStep = $recipeStep;
 
@@ -114,22 +114,25 @@ class CookingController extends Controller {
 
 
 	public function adminJoinRecipeStepsAction(Request $request) {
-		$repository = $this->getDoctrine()->getManager()->getRepository('Rap2hCookingBundle:RecipeStep');
+		$em = $this->getDoctrine()->getManager();
+		$repository = $em->getRepository('Rap2hCookingBundle:RecipeStep');
 		$defaultData = array('message' => 'Type your message here');
     	$form = $this->createFormBuilder($defaultData)
-    		->add('Element1', 'entity', array(
+    		->add('left', 'entity', array(
 			    'class' => 'Rap2hCookingBundle:RecipeStep',
-			    'query_builder' => function($repository) { 
-			    	return $repository->createQueryBuilder('p') /* ->orderBy('p.id', 'ASC') */ ; 
+			    'query_builder' => function($repository) {
+			    	return $repository->createQueryBuilder('p')->orderBy('p.id', 'ASC') ;
 			   	},
-			    'property' => 'randomText'
+			    'property' => 'randomText',
+			    'label' => 'Etape n°2'
 			))
-    		->add('Element2', 'entity', array(
+    		->add('right', 'entity', array(
 			    'class' => 'Rap2hCookingBundle:RecipeStep',
-			    'query_builder' => function($repository) { 
-			    	return $repository->createQueryBuilder('p') /* ->orderBy('p.id', 'ASC') */ ; 
+			    'query_builder' => function($repository) {
+			    	return $repository->createQueryBuilder('p')->orderBy('p.id', 'ASC') ;
 			   	},
-			    'property' => 'randomText'
+			    'property' => 'randomText',
+			    'label' => 'Etape n°2'
 			))
 			->getForm()
 		;
@@ -137,8 +140,46 @@ class CookingController extends Controller {
 		 $form->handleRequest($request);
 
 	    if ($form->isValid()) {
-	        // data is an array with "name", "email", and "message" keys
-	        $data = $form->getData();
+	    	$data = $form->getData();
+
+			// Mise à jour des textes
+	    	$left = $data['left'];
+	    	$right = $data['right'];
+
+	    	$all_texts = array();
+
+	    	foreach($left->getTexts() as $text) {
+				$all_texts[] = $text;
+    		}
+
+    		foreach($right->getTexts() as $text) {
+				$all_texts[] = $text;
+    		}
+
+			$right->setTexts($all_texts);
+			$left->setTexts($all_texts);
+
+			$em->persist($left);
+
+			$left_parent = $left->getParent();
+   			$right_parent = $right->getParent();
+
+			// Association au nouveau parents si le parent des deux est commun
+			if ( ($left_parent == null && $right_parent == null) || ($left_parent != null && $right_parent != null && $left_parent->getId() == $right_parent->getId()) ) {
+				// Charger tous ceux qui ont le 2eme pour parent
+				$childs = $repository->findBy(array('parent' => $right->getId()));
+				// Les mettre à jour avec le nouveau parent (le 1)
+				foreach($childs as $child) {
+					$child->setParent($left);
+					$em->persist($child);
+				}
+				// Supprimer le 2eme
+				$em->remove($right);
+			} else {
+				$em->persist($right);
+			}
+
+			$em->flush();
 	    }
 
 	    return $this->render('Rap2hCookingBundle:Cooking:joinRecipeSteps.html.twig', array(

@@ -41,7 +41,7 @@ class RecipeStep
     /**
      * Get id
      *
-     * @return integer 
+     * @return integer
      */
     public function getId()
     {
@@ -123,7 +123,7 @@ class RecipeStep
     public function addText(\Rap2h\CookingBundle\Entity\RecipeStepText $text)
     {
         $this->texts[] = $text;
-    
+
         return $this;
     }
 
@@ -140,12 +140,16 @@ class RecipeStep
     /**
      * Get texts
      *
-     * @return \Doctrine\Common\Collections\Collection 
+     * @return \Doctrine\Common\Collections\Collection
      */
     public function getTexts()
     {
         return $this->texts;
     }
+
+    public function setTexts($texts) {
+		$this->texts = $texts;
+   	}
 
     public function getRandomText() {
         return $this->texts[mt_rand(0, count($this->texts) - 1)]->getText();
