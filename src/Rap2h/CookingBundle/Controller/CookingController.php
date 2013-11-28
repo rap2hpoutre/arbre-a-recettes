@@ -124,7 +124,8 @@ class CookingController extends Controller {
 			    	return $repository->createQueryBuilder('p')->orderBy('p.id', 'ASC') ;
 			   	},
 			    'property' => 'randomText',
-			    'label' => 'Etape n°2'
+			    'label' => 'Etape n°1',
+			    'attr' => array('class' => 'form-control')
 			))
     		->add('right', 'entity', array(
 			    'class' => 'Rap2hCookingBundle:RecipeStep',
@@ -132,7 +133,8 @@ class CookingController extends Controller {
 			    	return $repository->createQueryBuilder('p')->orderBy('p.id', 'ASC') ;
 			   	},
 			    'property' => 'randomText',
-			    'label' => 'Etape n°2'
+			    'label' => 'Etape n°2',
+			    'attr' => array('class' => 'form-control')
 			))
 			->getForm()
 		;
