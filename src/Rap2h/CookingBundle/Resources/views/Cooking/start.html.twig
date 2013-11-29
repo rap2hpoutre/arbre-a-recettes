@@ -17,7 +17,7 @@
 <p>
 	<ul>
 		{% for item in availableRecipeSteps %}
-			<li><a href="{{ path('CookingAddRecipeItem', {'recipeItemId': item.id }) }}">Ajouter un {{ item.randomText }}</a></li>
+			<li><a href="{{ path('CookingAddRecipeItem', {'recipeItemId': item.id }) }}">{{ item.randomText }}</a></li>
 		{% else %}
 			<li>Aucune recette disponible.</li>
 		{% endfor %}
