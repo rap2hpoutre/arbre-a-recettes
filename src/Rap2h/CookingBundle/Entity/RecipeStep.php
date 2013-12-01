@@ -22,12 +22,12 @@ class RecipeStep
     private $id;
 
     /**
-     * @ORM\ManyToMany(targetEntity="Rap2h\CookingBundle\Entity\RecipeStepText", cascade={"persist"})
+     * @ORM\ManyToMany(targetEntity="Rap2h\CookingBundle\Entity\RecipeStepText", cascade={"persist", "remove"})
      */
     private $texts;
 
     /**
-     * @ORM\OneToMany(targetEntity="Rap2h\CookingBundle\Entity\RecipeStep", mappedBy="parent", cascade={"persist"})
+     * @ORM\OneToMany(targetEntity="Rap2h\CookingBundle\Entity\RecipeStep", mappedBy="parent", cascade={"persist", "remove"})
      **/
     private $childs;
 

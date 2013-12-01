@@ -21,10 +21,23 @@ CookingResetRecipe:
     pattern:  /reset/
     defaults: { _controller: Rap2hCookingBundle:Cooking:resetRecipe }
 
+
+# Administration
+
 CookingAdminAddRecipe:
     pattern:  /adminAddRecipe/
-    defaults: { _controller: Rap2hCookingBundle:Cooking:adminAddRecipe}
+    defaults: { _controller: Rap2hCookingBundle:Admin:addRecipe}
 
 CookingAdminJoinRecipeSteps:
     pattern:  /adminJoinRecipeSteps/
-    defaults: { _controller: Rap2hCookingBundle:Cooking:adminJoinRecipeSteps}
+    defaults: { _controller: Rap2hCookingBundle:Admin:joinRecipeSteps}
+
+CookingAdminManageRecipes:
+    pattern:  /adminManageRecipes/
+    defaults: { _controller: Rap2hCookingBundle:Admin:manageRecipes}
+
+CookingAdminDeleteRecipe:
+    pattern:  /adminDeleteRecipe/{recipeId}
+    defaults: { _controller: Rap2hCookingBundle:Admin:deleteRecipe}
+    requirements:
+        recipeItemId: \d+

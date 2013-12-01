@@ -5,6 +5,8 @@
 		<meta name="viewport" content="width=device-width, initial-scale=1.0">
 		<!-- Bootstrap -->
 		<link href="{{ asset('bundles/rap2hcooking/css/bootstrap.min.css') }}" rel="stylesheet">
+		{# <link href="{{ asset('bundles/rap2hcooking/css/bootstrap-theme.min.css') }}" rel="stylesheet"> #}
+		<link href="{{ asset('bundles/rap2hcooking/css/cooking.css') }}" rel="stylesheet">
 
 		<!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
 		<!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
@@ -13,7 +15,7 @@
 		  <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
 		<![endif]-->
     </head>
-    <body style="padding-top: 70px; padding-bottom: 30px; color: #777;">
+    <body>
 
 
 		<!-- Fixed navbar -->
@@ -51,6 +53,9 @@
 				<ul>
 					<li><a href="{{ path('CookingAdminAddRecipe') }}">Ajouter une recette en DB</a></li>
 					<li><a href="{{ path('CookingAdminJoinRecipeSteps') }}">Associer des éléments entre eux</a></li>
+					<li><a href="{{ path('CookingAdminManageRecipes') }}">Gérer les recettes</a></li>
+					{% block additionnal %}
+					{% endblock %}
 				</ul>
 			{% endif %}
 		</div>

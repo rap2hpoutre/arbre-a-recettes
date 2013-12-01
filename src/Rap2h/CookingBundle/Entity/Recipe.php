@@ -36,7 +36,7 @@ class Recipe
     private $author;
 
     /**
-  	 * @ORM\ManyToMany(targetEntity="Rap2h\CookingBundle\Entity\RecipeStep", cascade={"persist"})
+  	 * @ORM\ManyToMany(targetEntity="Rap2h\CookingBundle\Entity\RecipeStep", cascade={"persist", "remove"})
      */
     private $recipeSteps;
 

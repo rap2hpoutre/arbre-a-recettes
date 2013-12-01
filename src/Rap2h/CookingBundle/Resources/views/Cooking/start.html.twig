@@ -5,23 +5,26 @@
 {% block body %}
 <h1>Ma recette</h1>
 <p>
-    <ul>
-        {% for item in recipeSteps %}
-            <li>{{ item.text }}</li>
-        {% else %}
-            <li>Pas encore d'éléments dans la recette.</li>
+    {% if recipeSteps %}
+        <ul class="list-group">
+            {% for item in recipeSteps %}
+                <li class="list-group-item active">{{ item.text }}<span class="badge">{{loop.index}}</span></li>
+            {% endfor %}
+        </ul>
+    {% endif %}
+</p>
+{% if availableRecipeSteps %}
+    <p class="text-muted">Choisis ce que tu veux ajouter</p>
+    <div class="row btn-group btn-group-justified">
+        {% for item in availableRecipeSteps %}
+            <div class="col-md-{{ 12/loop.length}}">
+                <a class="btn btn-default" style="white-space: normal;" href="{{ path('CookingAddRecipeItem', {'recipeItemId': item.id }) }}">{{ item.randomText }}</a>
+            </div>
         {% endfor %}
-    </ul>
-</p>
-<h1>Actions</h1>
-<p>
-	<ul>
-		{% for item in availableRecipeSteps %}
-			<li><a href="{{ path('CookingAddRecipeItem', {'recipeItemId': item.id }) }}">{{ item.randomText }}</a></li>
-		{% else %}
-			<li>Aucune recette disponible.</li>
-		{% endfor %}
-    	<li><a href="{{ path('CookingResetRecipe') }}">Réinitialiser</a></li>
-	</ul>
-</p>
+    </div>
+{% endif %}
+
+{% endblock %}
+{% block additionnal %}
+<li><a href="{{ path('CookingResetRecipe') }}">Réinitialiser</a></li>
 {% endblock %}
