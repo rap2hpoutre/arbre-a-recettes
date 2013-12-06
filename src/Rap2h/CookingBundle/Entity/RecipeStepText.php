@@ -10,8 +10,7 @@ use Doctrine\ORM\Mapping as ORM;
  * @ORM\Table()
  * @ORM\Entity(repositoryClass="Rap2h\CookingBundle\Entity\RecipeStepTextRepository")
  */
-class RecipeStepText
-{
+class RecipeStepText {
     /**
      * @var integer
      *
@@ -28,14 +27,24 @@ class RecipeStepText
      */
     private $text;
 
+    /**
+  	 * @ORM\ManyToMany(targetEntity="Rap2h\CookingBundle\Entity\RecipeStep", mappedBy="texts")
+     */
+    private $steps;
+
+    /**
+     * Constructor
+     */
+    public function __construct() {
+        $this->steps = new \Doctrine\Common\Collections\ArrayCollection();
+    }
 
     /**
      * Get id
      *
-     * @return integer 
+     * @return integer
      */
-    public function getId()
-    {
+    public function getId() {
         return $this->id;
     }
 
@@ -45,20 +54,49 @@ class RecipeStepText
      * @param string $text
      * @return RecipeStepText
      */
-    public function setText($text)
-    {
+    public function setText($text) {
         $this->text = $text;
-    
+
         return $this;
     }
 
     /**
      * Get text
      *
-     * @return string 
+     * @return string
      */
-    public function getText()
-    {
+    public function getText() {
         return $this->text;
+    }
+
+
+    /**
+     * Add step
+     *
+     * @param \Rap2h\CookingBundle\Entity\RecipeStep $step
+     * @return RecipeStepText
+     */
+    public function addStep(\Rap2h\CookingBundle\Entity\RecipeStep $step) {
+        $this->steps[] = $step;
+
+        return $this;
+    }
+
+    /**
+     * Remove step
+     *
+     * @param \Rap2h\CookingBundle\Entity\RecipeStep $step
+     */
+    public function removeStep(\Rap2h\CookingBundle\Entity\RecipeStep $step) {
+        $this->steps->removeElement($step);
+    }
+
+    /**
+     * Get steps
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getSteps() {
+        return $this->steps;
     }
 }

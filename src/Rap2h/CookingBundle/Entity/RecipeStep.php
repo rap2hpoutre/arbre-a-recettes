@@ -22,12 +22,12 @@ class RecipeStep
     private $id;
 
     /**
-     * @ORM\ManyToMany(targetEntity="Rap2h\CookingBundle\Entity\RecipeStepText", cascade={"persist", "remove"})
+     * @ORM\ManyToMany(targetEntity="Rap2h\CookingBundle\Entity\RecipeStepText", inversedBy="steps", cascade={"persist"})
      */
     private $texts;
 
     /**
-     * @ORM\OneToMany(targetEntity="Rap2h\CookingBundle\Entity\RecipeStep", mappedBy="parent", cascade={"persist", "remove"})
+     * @ORM\OneToMany(targetEntity="Rap2h\CookingBundle\Entity\RecipeStep", mappedBy="parent", cascade={"persist"})
      **/
     private $childs;
 
@@ -36,6 +36,11 @@ class RecipeStep
      * @ORM\JoinColumn(name="parent_id", referencedColumnName="id")
      **/
     private $parent;
+
+	/**
+  	 * @ORM\ManyToMany(targetEntity="Rap2h\CookingBundle\Entity\Recipe", mappedBy="recipeSteps")
+     */
+    private $recipes;
 
 
     /**
@@ -120,10 +125,9 @@ class RecipeStep
      * @param \Rap2h\CookingBundle\Entity\RecipeStepText $text
      * @return RecipeStep
      */
-    public function addText(\Rap2h\CookingBundle\Entity\RecipeStepText $text)
-    {
+    public function addText(\Rap2h\CookingBundle\Entity\RecipeStepText $text) {
+    	$text->addStep($this);
         $this->texts[] = $text;
-
         return $this;
     }
 
@@ -152,6 +156,37 @@ class RecipeStep
    	}
 
     public function getRandomText() {
-        return $this->texts[mt_rand(0, count($this->texts) - 1)]->getText();
+    	// Pour l'instant on prend tout le temps le premier
+    	return $this->texts[0]->getText();
+        // return $this->texts[mt_rand(0, count($this->texts) - 1)]->getText();
+    }
+
+    /**
+     * Add recipe
+     *
+     * @param \Rap2h\CookingBundle\Entity\Recipe $recipe
+     * @return RecipeStep
+     */
+    public function addRecipe(\Rap2h\CookingBundle\Entity\Recipe $recipe) {
+        $this->recipes[] = $recipe;
+        return $this;
+    }
+
+    /**
+     * Remove recipe
+     *
+     * @param \Rap2h\CookingBundle\Entity\Recipe $recipe
+     */
+    public function removeRecipe(\Rap2h\CookingBundle\Entity\Recipe $recipe) {
+        $this->recipes->removeElement($recipe);
+    }
+
+    /**
+     * Get recipes
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getRecipes() {
+        return $this->recipes;
     }
 }

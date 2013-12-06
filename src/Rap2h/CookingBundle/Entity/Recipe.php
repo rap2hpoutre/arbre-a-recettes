@@ -36,7 +36,7 @@ class Recipe
     private $author;
 
     /**
-  	 * @ORM\ManyToMany(targetEntity="Rap2h\CookingBundle\Entity\RecipeStep", cascade={"persist", "remove"})
+  	 * @ORM\ManyToMany(targetEntity="Rap2h\CookingBundle\Entity\RecipeStep", inversedBy="recipes", cascade={"persist"})
      */
     private $recipeSteps;
 
@@ -112,8 +112,8 @@ class Recipe
      */
     public function addRecipeStep(\Rap2h\CookingBundle\Entity\RecipeStep $recipeStep)
     {
-        $this->recipeSteps[] = $recipeStep;
-
+        $recipeStep->addRecipe($this);
+		$this->recipeSteps[] = $recipeStep;
         return $this;
     }
 

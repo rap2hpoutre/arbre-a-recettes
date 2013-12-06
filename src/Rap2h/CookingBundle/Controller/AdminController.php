@@ -14,29 +14,44 @@ use Rap2h\CookingBundle\Entity\RecipeStepText;
 
 use Rap2h\CookingBundle\Form\RecipeType;
 
+/**
+ * AdminController
+ *
+ * @package arbre a recettes
+ * @author e-doceo
+ * @copyright 2013
+ * @version $Id$
+ * @access public
+ */
 class AdminController extends Controller {
 
+	/**
+	 * Ajout d'une recette
+	 */
 	public function addRecipeAction() {
+
+		// Création de l'entité
 		$recipe = new Recipe();
+
+		// Formulaire
 		$form = $this->createForm(new RecipeType(), $recipe);
 
+		// Traitement des requetes
 		$request = $this->get('request');
 
+		// Validation du formulaire
 		if ($request->getMethod() == 'POST') {
 
 			$form->bind($request);
 
+			// Traitement du formulaire s'il est valide
 			if ($form->isValid()) {
 
-				$a = $form->getData();
+				// La partie textarea qu'il faut parser séparément ...
 				$unlinked_recipe_text = $form->get('unlinked_recipe_text')->getData();
 
-				$em = $this->getDoctrine()->getManager();
-
-
-				// Les etapes
-
-				$steps     = explode( "\n", str_replace( "\r", "\n", str_replace( "\r\n", "\n", $unlinked_recipe_text ) ) );
+				// ... pour enregistrer les étapes
+				$steps = explode( "\n", str_replace( "\r", "\n", str_replace( "\r\n", "\n", $unlinked_recipe_text ) ) );
 				foreach ($steps as $key => $step) {
 
 					$recipeStepText = new RecipeStepText();
@@ -50,11 +65,18 @@ class AdminController extends Controller {
 
 					$recipe->addRecipeStep($recipeStep);
 				}
+
+				// On utilisera le manager ...
+				$em = $this->getDoctrine()->getManager();
+				// ... pour persister ...
 				$em->persist($recipe);
+				// ... puis enregistrer
 				$em->flush();
 
+				// Information flash de l'enregistrement
 				$this->get('session')->getFlashBag()->add('info', 'recette par formulaire ajouté');
 
+				// Redirection index (pour l'instant)
 				return $this->redirect($this->generateUrl('CookingIndex'));
 			}
 		}
@@ -66,6 +88,12 @@ class AdminController extends Controller {
 
 
 
+	/**
+	 * Associer des étapes entre elles
+	 *
+	 * @param mixed $request
+	 * @return
+	 */
 	public function joinRecipeStepsAction(Request $request) {
 		$em = $this->getDoctrine()->getManager();
 		$repository = $em->getRepository('Rap2hCookingBundle:RecipeStep');
@@ -142,12 +170,12 @@ class AdminController extends Controller {
 		));
 	}
 
+	/**
+	 * AdminController::manageRecipesAction()
+	 *
+	 * @return
+	 */
 	public function manageRecipesAction() {
-		/*
-		$intentions = 'manageRecipes';  
- 		$csrfToken = $this->container->get('form.csrf_provider')->generateCsrfToken($intentions);
-		*/
-
 		$recipes = $this->getDoctrine()->getManager()->getRepository('Rap2hCookingBundle:Recipe')->findAll();
 
 		return $this->render('Rap2hCookingBundle:Cooking:manageRecipes.html.twig', array(
@@ -155,9 +183,40 @@ class AdminController extends Controller {
 		));
 	}
 
+	/**
+	 * AdminController::deleteRecipeAction()
+	 *
+	 * @param mixed $recipeId
+	 * @todo mettre un CSRF
+	 * @todo l'ordre de traitement déconne au niveau des steps
+	 * @return
+	 */
 	public function deleteRecipeAction($recipeId) {
+		// On a besoin du manager
 		$em = $this->getDoctrine()->getManager();
+
+		// On charge la recette
 		$recipe = $em->getRepository('Rap2hCookingBundle:Recipe')->find($recipeId);
+
+		// On va supprimer tous ses steps qui deviendraient orphelin
+		// On fait ici une suppression en cascade "intelligente", il n'y a pas moyen de passer par les annotations ...
+		// .. c'est pas faute d'avoir cherché (je suis dans un cas spécial)
+		foreach($recipe->getRecipeSteps() as $step) {
+			// S'il ce n'est associé qu'à une recette c'est celle là, donc on va pouvoir le supprimer
+			if (count($step->getRecipes()) <= 1) {
+				// Mais avant on va aussi supprimer les textes potentiellement plus utilisés
+				foreach($step->getTexts() as $text) {
+					if (count($text->getSteps()) <= 1) {
+						$em->remove($text);
+				 	}
+				}
+				$step->setParent(null);
+				foreach($step->getChilds() as $child) {
+					$step->removeChild($child);
+				}
+				$em->remove($step);
+			}
+		}
 
 		$em->remove($recipe);
 		$em->flush();
@@ -167,6 +226,11 @@ class AdminController extends Controller {
 		return $this->redirect($this->generateUrl('CookingAdminManageRecipes'));
 	}
 
+	/**
+	 * AdminController::cleanDatabase()
+	 *
+	 * @return
+	 */
 	public function cleanDatabase() {
 		// TODO
 	}
