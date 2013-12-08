@@ -28,12 +28,13 @@ class RecipeStep
 
     /**
      * @ORM\OneToMany(targetEntity="Rap2h\CookingBundle\Entity\RecipeStep", mappedBy="parent", cascade={"persist"})
+     * @ORM\JoinColumn(name="id", referencedColumnName="parent_id", nullable=true, onDelete="SET NULL")
      **/
     private $childs;
 
     /**
      * @ORM\ManyToOne(targetEntity="Rap2h\CookingBundle\Entity\RecipeStep", inversedBy="childs")
-     * @ORM\JoinColumn(name="parent_id", referencedColumnName="id")
+     * @ORM\JoinColumn(name="parent_id", referencedColumnName="id", nullable=true, onDelete="SET NULL")
      **/
     private $parent;
 

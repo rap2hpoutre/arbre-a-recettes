@@ -214,6 +214,7 @@ class AdminController extends Controller {
 				foreach($step->getChilds() as $child) {
 					$step->removeChild($child);
 				}
+				// $em->persist($step);
 				$em->remove($step);
 			}
 		}
