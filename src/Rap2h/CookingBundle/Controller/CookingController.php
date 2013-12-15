@@ -18,9 +18,7 @@ use Rap2h\CookingBundle\Form\RecipeType;
  * CookingController
  *
  * @package arbre a recettes
- * @author e-doceo
- * @copyright 2013
- * @version $Id$
+ * @author Rap2h
  * @access public
  */
 class CookingController extends Controller {
@@ -49,14 +47,21 @@ class CookingController extends Controller {
 	 * @return
 	 */
 	public function startAction() {
-		$session = $this->get('session');
-		$session->start();
-		$items = $session->get('recipeSteps');
+		// Chargement des éléments de la recette en train d'être faite
+		$items = $this->get('rap2h_cooking.cooking_session')->getItems();
 
+		// Chargement des items disponibles
 		$repository = $this->getDoctrine()->getManager()->getRepository('Rap2hCookingBundle:RecipeStep');
 		$availableRecipeSteps = $repository->findBy(array('parent' => count($items) ? end($items)->id : null));
 
-		return $this->render('Rap2hCookingBundle:Cooking:start.html.twig', array("recipeSteps" => $items, 'availableRecipeSteps' => $availableRecipeSteps));
+		// Rendu
+		return $this->render(
+			'Rap2hCookingBundle:Cooking:start.html.twig', 
+			array(
+				"recipeSteps" => $items, 
+				'availableRecipeSteps' => $availableRecipeSteps
+			)
+		);
 	}
 
 	/**
@@ -65,9 +70,7 @@ class CookingController extends Controller {
 	 * @return
 	 */
 	public function resetRecipeAction() {
-		$session = $this->get('session');
-		$session->start();
-		$session->set('recipeSteps', null);
+		$this->get('rap2h_cooking.cooking_session')->clearItems();
 		return $this->redirect($this->generateUrl('CookingStart'));
 	}
 
@@ -79,20 +82,9 @@ class CookingController extends Controller {
 	 */
 	public function addRecipeStepAction($recipeItemId) {
 
-		$session = $this->get('session');
-		$session->start();
-
 		$item = $this->getDoctrine()->getManager()->getRepository('Rap2hCookingBundle:RecipeStep')->find($recipeItemId);
 
-
-		// $session->getFlashBag()->add('info', 'Tu viens d\'ajouter une ' . $item->getRandomText());
-		$itema = new \stdClass();
-		$itema->text = $item->getRandomText();
-		$itema->id = $item->getId();
-
-		$items = $session->get('recipeSteps');
-		$items[] = $itema;
-		$session->set('recipeSteps', $items);
+		$this->get('rap2h_cooking.cooking_session')->addItem($item->getRandomText(), $item->getId());
 
 		return $this->redirect($this->generateUrl('CookingStart'));
 

@@ -1,7 +1,8 @@
 parameters:
-#    rap2h_cooking.example.class: Rap2h\CookingBundle\Example
+    rap2h_cooking.cooking_session.class: Rap2h\CookingBundle\CookingSession\CookingSession
 
 services:
-#    rap2h_cooking.example:
-#        class: %rap2h_cooking.example.class%
-#        arguments: [@service_id, "plain_value", %parameter%]
+    rap2h_cooking.cooking_session:
+        class: %rap2h_cooking.cooking_session.class%
+        arguments: [@session]
+#       arguments: [@service_id, "plain_value", %parameter%]
